@@ -61,7 +61,7 @@ export const addTask = async (req:any,res:Response) => {
     }
     const task = await db
         .insert(tasks)
-        .values({id: uuidv4(), title: req.body.title, description: req.body.description, isCompleted: req.body.completed, userId: id})
+        .values({id: uuidv4(), title: req.body.title, description: req.body.description, isCompleted: req.body.isCompleted, userId: id})
         .returning();
     res.json(task);
         
@@ -77,7 +77,7 @@ export const addTask = async (req:any,res:Response) => {
 
 
 export const updateTask = async (req:any,res:any) => {
-    const {title,description,completed}=req.body;
+    const {title,description,isCompleted}=req.body;
     const {id}=req.user;
     const taskId=req.params.id;
     try {
@@ -87,7 +87,7 @@ export const updateTask = async (req:any,res:any) => {
             return res.status(404).json({ error: 'Task not found' });
         }
     
-       const task=await db.update(tasks).set({title: title, description: description, isCompleted: completed }).where(and(eq(tasks.id,taskId),eq(tasks.userId, id))).returning();
+       const task=await db.update(tasks).set({title: title, description: description, isCompleted: isCompleted }).where(and(eq(tasks.id,taskId),eq(tasks.userId, id))).returning();
        console.log(task)
        res.json(task);
         
